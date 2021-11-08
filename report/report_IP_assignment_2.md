@@ -1,7 +1,7 @@
 ---
 # These are meta-variables defined with YAML syntax, change them as you wish.
 # see https://pandoc.org/MANUAL.html#variables
-title: TDT4195 IP Assignment 1
+title: TDT4195 IP Assignment 2
 author:
 - Vegard Haraldstad
 date: \today # This is a latex command, ignored for HTML output
@@ -21,57 +21,157 @@ links-as-notes: true
 
 ## a)
 
-Sampling is how we divide a continuous space into a discretized space, digitalizing it and making it possible to quantize the space.
+Inserting 
+
+$$
+H_2 = H_1
+$$
+$$
+W_2 = W_1
+$$
+$$
+F_H = F_W = 5
+$$
+$$
+S_H = S_W = 1
+$$
+
+Into equation (1) and (2) yields
+
+$$
+P_H = P_W = 2
+$$
 
 ## b)
 
-Quantization is the digitalization of the amplitude (f. ex. light intensity) for each of the sampled parts of the space. 
+Inserting 
+
+$$
+H_1 = W_1 = 512
+$$
+$$
+H_2 = W_2 = 504
+$$
+$$
+P_H = P_W = 0
+$$
+$$
+S_H = S_W = 1
+$$
+
+Into equation (1) and (2) yields
+
+$$
+F_H = F_W = 9
+$$
+
+which gives a square kernel of odd size as the task requested.
 
 ## c)
 
-If the distribution of pixels is equally distributed over the range of the intensity values in an image histogram, we can see that the picture will have high contrast. 
-In other words, if the histogram is flat will the picture have high contrast.
+Again, using equation (1) and (2) and inserting
+
+$$
+H_1 = W_1 = 504
+$$
+$$
+S_H = S_W = 2
+$$
+$$
+P_H = P_W = 0
+$$
+$$
+F_H = F_W = 2
+$$
+
+yields
+
+$$
+H_2 \times W_2 = 252 \times 252
+$$
 
 ## d)
 
-The first step is to compute H_r(r) by counting the different pixel intensities. Further, the PDF and CDF was computed using 
-
-$$ 
-p_r(r_k) = \frac{H_r(r)}{MN} 
-$$
-$$
-F_r(r_k) = \sum_{j=1}^{k} p_r(r_j)
-$$  
-
-Last, the transformation was computed using
+Inserting
 
 $$
-T(r) = \left \lfloor{(L-1)F_r(r)}\right \rfloor 
+H_1 = W_1 = 252
+$$
+$$
+S_H = S_W = 1
+$$
+$$
+P_H = P_W = 0
+$$
+$$
+F_H = F_W = 3
 $$
 
-The results from the computations is shown in the table below
+yields
 
-
-| r | H_r(r) | p_r(r_k) | F_r(r_k) | T(r) |
-|---|--------|----------|----------|------|
-| 0 |    1   |  0.0667  |  0.0667  |   0  |
-| 1 |    1   |  0.0667  |  0.1333  |   0  |
-| 2 |    0   |     0    |  0.1333  |   0  |
-| 3 |    1   |  0.0667  |  0.2000  |   1  |
-| 4 |    2   |  0.1333  |  0.3333  |   2  |
-| 5 |    2   |  0.1333  |  0.4667  |   3  |
-| 6 |    4   |  0.2667  |  0.7333  |   5  |
-| 7 |    4   |  0.2667  |     1    |   7  |
-
-
-Using the transformation s = T(r) on the provided image yields the following image
-
-![](images/Task_1_d.PNG){height=10em}
+$$
+H_2 \times W_2 = 250 \times 250
+$$
 
 
 ## e)
 
-If we apply a log transform to an image with large variance in the pixel intensities will the low intensities be widened and the bright intensities squeezed. This will be the same as reducing the dynamic range of an image, making it easier for the human eye to observe the details of both the part of the picture with low intensities and bright intensities. 
+Since each layer has square kernels and a convolution operation and a maxpool operation, the number of weights, N_wi for each layer will be
+
+$$
+N_{w i} = (F_{conv i}^2 + F_{m pool i}^2) * C_{i-1} * C{i}
+$$
+
+For the different layers we get
+
+$$
+N_{w 1} = 928 800
+$$
+$$
+N_{w 2} = 26624 18432
+$$
+$$
+N_{w 3} = 106496 73728
+$$
+
+Further the number of biases will equal the number of output filters.
+
+$$
+N_{b 1} = 32 
+$$
+$$
+N_{b 2} = 64 
+$$
+$$
+N_{b 3} = 128
+$$
+
+For the NN we have
+
+$$
+N_{w4} = (4*4)*128*64 = 131072   
+$$
+
+$$
+N_{b4} = 64   
+$$
+
+$$
+N_{w5} = 64*10 = 640   
+$$
+
+$$
+N_{b5} = 10   
+$$
+
+Summing up the number of parameters we have
+
+$$
+N_p = 224970
+$$
+
+
+
 
 ## f)
 
