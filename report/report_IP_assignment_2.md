@@ -119,19 +119,19 @@ $$
 Since each layer has square kernels and a convolution operation and a maxpool operation, the number of weights, N_wi for each layer will be
 
 $$
-N_{w i} = (F_{conv i}^2 + F_{m pool i}^2) * C_{i-1} * C{i}
+N_{w i} = F_{conv i}^2 * C_{i-1} * C{i}
 $$
 
 For the different layers we get
 
 $$
-N_{w 1} = 928 800
+N_{w 1} = 800
 $$
 $$
-N_{w 2} = 26624 18432
+N_{w 2} = 18432
 $$
 $$
-N_{w 3} = 106496 73728
+N_{w 3} = 73728
 $$
 
 Further the number of biases will equal the number of output filters.
@@ -171,138 +171,95 @@ N_p = 224970
 $$
 
 
-
-
-## f)
-
-Using zero padding, the convolution produces the following image
-
-![](images/Task_1_f.PNG){height=10em}
-
-\clearpage
-
-
 # Task 2
 
 ## a)
 
-An image of a lake in grayscale
+Plot of the training and validation loss
 
-![](images\lake_greyscale.jpg){height=25em}
+![](images\task2a_plot.png){height=25em}
+
+A sign of overfitting is that the CNN has higher accuracy for the training set than the test set, indicating that the network is starting to "specialize" in recognizing the training set, not the general attribute/object the training set is set to represent. If the training loss is lower than the test loss, this is an indication on overfitting. As we see from the figure, this is not happening in our network.  
 
 ## b)
 
-An image if a lake in grayscale inverted
+Plot of the training and validation loss running with Adam and SDG algorithms as optimizers
 
-![](images\lake_greyscale_inverse.jpg){height=25em}
+![](images\task2b_plot.png){height=25em}
 
 ## c)
 
-An convoluted image of a lake, using the kernel h_a
+Visualized filters and activations
 
-![](images\im_sobel.jpg){height=25em}
+![](images\task_2c.png){height=35em}
 
-An convoluted image of a lake, using the kernel h_b
+## d)
 
-![](images\im_smoothed.jpg){height=25em}
+The first filter, represented by the two images to the left, looks like is extracting the vertical edges of the image. The activation shows mostly vertical edges and the visualization of the filter looks like a vertical sobel filter. The second image looks like it is extracting fine edges parallel to the diagonal from the top left corner to the bottom right. Again the activation contains only fine diagonal edges and the filter looks like a diagonal sobel filter. The mid filter seems to extract the foreground of the image, filtering out both the horizon and the zebra. However, it still gives some activation to the zebra, effectively dividing the image in three objects. The filter visualization have a lot of green, possibly representing the greenish foreground. The next filter seems to extract the edges of the zebra. The activation mostly contains edges consistent with the edges of the zebra. The last filter seems to extract the sky. Again the activation views three different objects and the visualized filter have a lot of blue, the same as the sky.
 
-\clearpage
 
 # Task 3
 
 ## a)
 
-XOR is a boolean operator that can't be represented by a single-layer neural network. Given a network with two inputs, two weights, one bias and one output, it is not possible to choose the weights and bias in such a way that we can achieve both the or operation when only one of the inputs is active, and in the same time get the exclusivity when both inputs are active on the same time.
+First of all will vertical stripes give horizontal frequency components and visa versa. Further will large frequencies in the spatial domain (like 1a) give frequency components far from the origo than smaller frequencies.
+Since 1a have the larges frequency with horizontal stripes, it maps to 2e which have the largest vertical frequency components. The rest of the mappings follow the same reasoning. 
+
+| Spatial domain | Frequency domain |
+|:--------------:|:-----------:|
+|       1a       |      2e     |
+|       1b       |      2c     |
+|       1c       |      2f     |
+|       1d       |      2b     |
+|       1e       |      2d     |
+|       1f       |      2a     |
 
 ## b)
 
-A hyperparameter is a parameter that is used to control the learning process of a neural network, opposed to other parameters that are obtained during training. 
+High-pass filters are filters that filters out low frequencies and let high frequencies thought. Low-pass filters do the opposite. 
 
 ## c)
 
-Because the use of the softmax function normalizes the outputs in such a way that the total of the outputs equals one. Further, will the output of one object class correspond to the probability of that object being the one in the image, giving a nice interpretation of the result. 
+We know that that small frequency components are centered around the origo (center of the kernel). Convoluting a) with a picture (multiplying in the frequency domain) will remove the low frequency components as black corresponds to 0 in the kernel. Hence is a) a high-pass filter.
+The opposite is true for the b) kernel, hence it is a low-pass filter.
 
-## d)
-
-The first task is to do a forward pass of the network. By doing the calculations, the result is that c_1 = 2, and c_2 = -4, giving that y^ = 0 and that C = 0.5
-The next step is to do a backward pass. Since c_1 > c_2, max(c_1, c_2) = c_1, giving that a backward pass on the bottom half gives zero for all parameters. For the top part, we use the chain rule to compute the derivatives. The resulting derivatives is
-
-$$
-\frac{\partial C}{\partial b_1} = \frac{\partial C}{\partial \hat{y}} \frac{\partial \hat{y}}{\partial c_1} \frac{\partial c_1}{\partial b_1} = \hat{y}_n-y_n = 1
-$$
-
-$$
-\frac{\partial C}{\partial b_2} = 0
-$$
-
-$$
-\frac{\partial C}{\partial w_1} =  (\hat{y}_n-y_n)x_1 = -1 
-$$
-
-$$
-\frac{\partial C}{\partial w_2} = (\hat{y}_n-y_n)x_2 = 0
-$$
-
-$$
-\frac{\partial C}{\partial w_3} = 0 
-$$
-
-$$
-\frac{\partial C}{\partial w_4} = 0 
-$$
-
-## e)
-
-Using equation (4) in the assignment, we end up with the following weights
-
-$$
-w_{1 u} = w_1 - \alpha \frac{\partial C}{\partial w_1} = -0.9
-$$
-
-$$
-w_{3 u} = w_3 - \alpha \frac{\partial C}{\partial w_3} = -1
-$$
-
-$$
-b_{1 u} = b_1 - \alpha \frac{\partial C}{\partial b_1} = 0.9
-$$
-
-\clearpage
 
 # Task 4
 
 ## a)
 
-We see that the training is faster and the final result is better with normalized images
+Images of the different steps doing low-pass filtering of the "camera man" image.
 
-![](images/Task_4a.png){height=35em}
+![](images/task4a_low-pass.png){height=25em}
+
+Images of the different steps doing high-pass filtering of the "camera man" image.
+
+![](images/task4a_high-pass.png){height=25em}
+
+The ringing effect appears since we are using box filters to filter the image. A box filter is a filter with sharp edges. A box inverse Fourier transformed gives a sinc response, resembling a ringing effect. This can be avoided by using a gaussian approximation instead of a box filter. 
 
 
 ## b)
 
-The weights for each respective digit, represented as a 28x28 grayscale image. We see that some of the pictures very clearly have the same form as the digit they represent, and for some, we have to use some imagination to see the similarities with the digit. The pictures are represented in ascending order.
+A image filtered by the gaussian filter
 
-![](images/task_4_b_0.jpg){height=18em}
-![](images/task_4_b_1.jpg){height=18em}
-![](images/task_4_b_2.jpg){height=18em}
-![](images/task_4_b_3.jpg){height=18em}
-![](images/task_4_b_4.jpg){height=18em}
-![](images/task_4_b_5.jpg){height=18em}
-![](images/task_4_b_6.jpg){height=18em}
-![](images/task_4_b_7.jpg){height=18em}
-![](images/task_4_b_8.jpg){height=18em}
-![](images/task_4_b_9.jpg){height=18em}
+![](images/camera_gaussian.png){height=25em}
+
+A image filtered by the horizontal sobel filter
+
+![](images/camera_sobelx.png){height=25em}
 
 ## c)
 
-Plot of the loss with learning rate lr = 1.0
+Image showing the filtered moon. 
 
-![](images/task_4c.png){height=35em}
+![](images/moon_filtered.png){height=25em}
 
-We see that the loss is much larger than with 0.0192. This comes from the gradient descent method, and how a step size (the same as learning rate) of 1.0 does not guarantee convergence of the method. Neither does a step size of 0.0192, but it is much more likely to give convergence. A method for finding lr, like line search that satisfies the Wolfe conditions would be a much better choice. 
+The image was filtered by masking out all the vertical frequency components (horizontal in the frequency domain) except those close to the origo.
+
 
 ## d)
 
-We see that a network with a hidden layer with ReLU as the activation function performs better as the same network without the hidden layer 
+Image of the different steps resulting in a rotated image of the scanned pages.
 
-![](images/task_4d.png){height=35em}
+![](images/task4d.png){height=25em}
